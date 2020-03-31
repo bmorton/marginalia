@@ -17,6 +17,7 @@ services:
 script: "bundle exec rake db:reset test:all"
 
 gemfile:
+  - gemfiles/3.2.gemfile
   - gemfiles/4.2.gemfile
   - gemfiles/4.2.api.gemfile
   - gemfiles/5.0.gemfile
