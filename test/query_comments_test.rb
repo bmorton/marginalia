@@ -5,6 +5,10 @@ def using_rails_api?
   ENV["TEST_RAILS_API"] == true
 end
 
+def requires_mysql2_patch?
+  Gem::Version.new(Rails::VERSION::STRING) < Gem::Version.new('4.0')
+end
+
 def request_id_available?
   Gem::Version.new(Rails::VERSION::STRING) >= Gem::Version.new('3.2')
 end
@@ -36,6 +40,14 @@ end
 
 if using_rails_api?
   require 'rails-api/action_controller/api'
+end
+
+if requires_mysql2_patch?
+  require 'active_record/connection_adapters/mysql2_adapter'
+
+  class ActiveRecord::ConnectionAdapters::Mysql2Adapter
+    NATIVE_DATABASE_TYPES[:primary_key] = "int(11) auto_increment PRIMARY KEY"
+  end
 end
 
 # Shim for compatibility with older versions of MiniTest
